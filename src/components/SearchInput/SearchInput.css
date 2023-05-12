@@ -1,0 +1,16 @@
+.search {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.title {
+    color: #FBB13C;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.search-input {
+    border: 1px solid #C4C4C4;
+    padding: 10px 20px;
+}
