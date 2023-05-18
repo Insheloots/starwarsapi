@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import Skeleton from 'react-loading-skeleton';
+import { useState, useEffect } from "react";
 import SearchInput from "../SearchInput";
 import Charging from "../Charging";
-
-
+import Popover from "../Popover";
+import { usePopper } from "react-popper";
+import { Portal } from "../Portal";
 
 const Search = () => {
     // Set de Hooks
@@ -16,8 +16,8 @@ const Search = () => {
     if (!search) {
         results = characters;
     } else {
-        results = characters.filter((dato) =>
-            dato.name.toLowerCase().includes(search.toLocaleLowerCase())
+        results = characters.filter((data) =>
+            data.name.toLowerCase().includes(search.toLocaleLowerCase())
         )
     }
 
@@ -37,7 +37,9 @@ const Search = () => {
                 }
                 const mappedCharacters = allCharacters.map(character => ({
                     name: character.name,
-                    height: character.height
+                    height: character.height,
+                    mass: character.mass,
+                    gender: character.gender
                 }));
 
                 setCharacters(mappedCharacters);
@@ -51,8 +53,24 @@ const Search = () => {
         fetchData();
     }, []);
 
+    //Popup logic
+    const [showPopover, setShowPopover] = useState(false);
 
-    return <div className="flex flex-col items-center justify-center mt-40">
+    let [referenceElement, setReferenceElement] = useState();
+    let [popperElement, setPopperElement] = useState();
+
+    let { styles, attributes } = usePopper(referenceElement, popperElement);
+
+    //Capture selected character
+    const [selectedCharacter, setSelectedCharacter] = useState(null);
+
+    const handleRowClick = (character, trRef) => {
+        setSelectedCharacter(character);
+        setReferenceElement(trRef); // Establecer la referencia al botón seleccionado
+        setShowPopover(true);
+    };
+
+    return (<div className="flex flex-col items-center justify-center mt-40">
 
         <h1 className="text-4xl font-thin text-white font-mono text-amber-500">Star Wars API</h1>
 
@@ -65,7 +83,7 @@ const Search = () => {
                 <Charging />
             </div>
         ) : (
-            <table className="w-6/12 mt-3">
+            <table className="w-1/4 mt-3">
                 <caption className="p-3 text-md text-gray-500 font-semibold caption-bottom bg-gray-300 border-b-2 border-gray-200">Characters Star Wars</caption>
                 <thead className="bg-gray-50 border-b-2 border-gray-200">
                     <tr>
@@ -75,19 +93,37 @@ const Search = () => {
                 </thead>
                 <tbody>
                     {<Charging /> && results.map((character, index) => (
-                        <tr key={index} className="bg-white hover:bg-gray-100 cursor-pointer transition ease-in duration-150 delay-0">
+                        <tr
+                            key={index}
+                            ref={setReferenceElement}
+                            onClick={(e) => handleRowClick(character, e.target)}
+                            className="bg-white hover:bg-gray-100 cursor-pointer transition ease-in duration-150 delay-0"
+                        >
                             <td className="p-3 text-sm text-gray-700">{character.name}</td>
                             <td className="p-3 text-sm text-gray-700">{character.height !== 'unknown' ? character.height + ' cm' : 'Unknown Height'}</td>
                         </tr>
                     ))}
                 </tbody>
+                <Portal>
+                    {showPopover && (
+                        <div
+                            className="absolute z-10 bg-black p-4 shadow"
+                            ref={setPopperElement}
+                            style={styles.popper}
+                            {...attributes.popper}
+                        >
+                            <h2 className="text-white">{selectedCharacter.name}</h2>
+                            <p className="text-white">Height: {selectedCharacter.height}</p>
+                            <p className="text-white">Mass: {selectedCharacter.mass}</p>
+                            <p className="text-white">Gender: {selectedCharacter.gender}</p>
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ver más</button>
+                        </div>
+                    )}
+                </Portal>
             </table>
         )
-
         }
-
-
-    </div>
+    </div>)
 }
 
 export default Search;
