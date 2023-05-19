@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import SearchInput from "../SearchInput";
 import Charging from "../Charging";
-import Popover from "../Popover";
 import { usePopper } from "react-popper";
 import { Portal } from "../Portal";
 
@@ -66,7 +65,7 @@ const Search = () => {
 
     const handleRowClick = (character, trRef) => {
         setSelectedCharacter(character);
-        setReferenceElement(trRef); // Establecer la referencia al botón seleccionado
+        setReferenceElement(trRef);
         setShowPopover(true);
     };
 
@@ -107,16 +106,16 @@ const Search = () => {
                 <Portal>
                     {showPopover && (
                         <div
-                            className="absolute z-10 bg-black p-4 shadow"
+                            className="flex flex-col justify-around items-start bg-slate-400 rounded p-6"
                             ref={setPopperElement}
                             style={styles.popper}
                             {...attributes.popper}
                         >
-                            <h2 className="text-white">{selectedCharacter.name}</h2>
-                            <p className="text-white">Height: {selectedCharacter.height}</p>
-                            <p className="text-white">Mass: {selectedCharacter.mass}</p>
-                            <p className="text-white">Gender: {selectedCharacter.gender}</p>
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ver más</button>
+                            <h1 className="font-bold text-amber-800 my-1">{selectedCharacter.name}</h1>
+                            <h2 className="text-amber-700 my-2 font-medium">Height: <p className="text-black font-normal">{selectedCharacter.height}cm</p></h2>
+                            <h2 className="text-amber-700 my-2 font-medium">Mass: <p className="text-black font-normal">{selectedCharacter.mass}</p></h2>
+                            <h2 className="text-amber-700 my-2 font-medium">Gender: <p className="text-black font-normal">{selectedCharacter.gender}</p></h2>
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Know More</button>
                         </div>
                     )}
                 </Portal>
