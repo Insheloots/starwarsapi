@@ -3,7 +3,6 @@ import SearchInput from "../SearchInput";
 import Charging from "../Charging";
 import { usePopper } from "react-popper";
 import { Portal } from "../Portal";
-
 const Search = () => {
     // Set de Hooks
     const [characters, setCharacters] = useState([]);
@@ -71,7 +70,7 @@ const Search = () => {
 
     return (<div className="flex flex-col items-center justify-center mt-40">
 
-        <h1 className="text-4xl font-thin text-white font-mono text-amber-500">Star Wars API</h1>
+        <h1 className="text-4xl font-thin text-white font-space text-amber-500" >Star Wars API</h1>
 
         <SearchInput
             value={search}
@@ -82,12 +81,12 @@ const Search = () => {
                 <Charging />
             </div>
         ) : (
-            <table className="w-1/4 mt-3">
+            <table className="w-1/4 mt-3 font-space">
                 <caption className="p-3 text-md text-gray-500 font-semibold caption-bottom bg-gray-300 border-b-2 border-gray-200">Characters Star Wars</caption>
                 <thead className="bg-gray-50 border-b-2 border-gray-200">
                     <tr>
-                        <th className="p-3 text-sm font-semibold tracking-wide text-left">NAME</th>
-                        <th className="p-3 text-sm font-semibold tracking-wide text-left">HEIGH</th>
+                        <th className="p-3 text-base font-semibold tracking-wide text-left">NAME</th>
+                        <th className="p-3 text-base font-semibold tracking-wide text-left">HEIGH</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,24 +97,37 @@ const Search = () => {
                             onClick={(e) => handleRowClick(character, e.target)}
                             className="bg-white hover:bg-gray-100 cursor-pointer transition ease-in duration-150 delay-0"
                         >
-                            <td className="p-3 text-sm text-gray-700">{character.name}</td>
-                            <td className="p-3 text-sm text-gray-700">{character.height !== 'unknown' ? character.height + ' cm' : 'Unknown Height'}</td>
+                            <td className="p-3 text-base text-gray-700">{character.name}</td>
+                            <td className="p-3 text-base text-gray-700">{character.height !== 'unknown' ? character.height + ' cm' : 'Unknown Height'}</td>
                         </tr>
                     ))}
                 </tbody>
                 <Portal>
                     {showPopover && (
                         <div
-                            className="flex flex-col justify-around items-start bg-slate-400 rounded p-6"
+                            className="font-teko flex flex-col justify-around items-start z-10 bg-gray-900 text-white p-4 rounded-lg"
                             ref={setPopperElement}
                             style={styles.popper}
                             {...attributes.popper}
                         >
-                            <h1 className="font-bold text-amber-800 my-1">{selectedCharacter.name}</h1>
-                            <h2 className="text-amber-700 my-2 font-medium">Height: <p className="text-black font-normal">{selectedCharacter.height}cm</p></h2>
-                            <h2 className="text-amber-700 my-2 font-medium">Mass: <p className="text-black font-normal">{selectedCharacter.mass}</p></h2>
-                            <h2 className="text-amber-700 my-2 font-medium">Gender: <p className="text-black font-normal">{selectedCharacter.gender}</p></h2>
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Know More</button>
+                            <div className="flex flex-col space-y-2">
+                                <div className="text-3xl font-semibold tracking-wide bg-gradient-to-r from-yellow-500 to-red-500 bg-clip-text text-transparent">{selectedCharacter.name}</div>
+                                <div className="flex items-center space-x-2">
+                                    <span className="text-2xl text-gray-300 tracking-wide">Height:</span>
+                                    <span className="text-gray-400 text-2xl tracking-wide">{selectedCharacter.height} cm</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <span className="text-2xl text-gray-300 tracking-wide">Mass:</span>
+                                    <span className="text-gray-400 text-2xl tracking-wide">{selectedCharacter.mass} kg</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <span className="text-2xl text-gray-300 tracking-wide">Gender:</span>
+                                    <span className="text-gray-400 text-2xl tracking-wide">{selectedCharacter.gender}</span>
+                                </div>
+                            </div>
+                            <button className="items-center bg-gray-800 hover:bg-gray-700 text-2xl text-gray-300 tracking-wider py-2 px-4 rounded mt-5">
+                                Know More
+                            </button>
                         </div>
                     )}
                 </Portal>
