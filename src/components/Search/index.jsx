@@ -51,12 +51,32 @@ const Search = () => {
                 allCharacters = allCharacters.concat(data.results);
                 nextUrl = data.next;
             }
-            const mappedCharacters = allCharacters.map((character) => ({
-                name: character.name,
-                height: character.height,
-                mass: character.mass,
-                gender: character.gender,
-            }));
+
+            const mappedCharacters = await Promise.all(
+                allCharacters.map(async (character) => {
+                    const homeworldResponse = await fetch(character.homeworld);
+                    const homeworldData = await homeworldResponse.json();
+
+                    const filmsData = await Promise.all(
+                        character.films.map(async (film) => {
+                            const filmResponse = await fetch(film);
+                            const filmData = await filmResponse.json();
+                            return filmData;
+                        })
+                    );
+
+                    return {
+                        name: character.name,
+                        height: character.height,
+                        mass: character.mass,
+                        gender: character.gender,
+                        birth_year: character.birth_year,
+                        homeworld: homeworldData.name, // Mostrar el nombre del planeta en lugar del enlace
+                        films: filmsData.map((film) => film.title), // Mostrar los títulos de las películas en lugar de los enlaces
+                    };
+                })
+            );
+
             localStorage.setItem("characters", JSON.stringify(mappedCharacters));
             setCharacters(mappedCharacters);
             setLoading(false);
@@ -64,7 +84,7 @@ const Search = () => {
             console.log(error);
             setLoading(false);
         }
-    }
+    };
 
     //Remove localstore data
     const handleBeforeUnload = () => {
@@ -81,17 +101,21 @@ const Search = () => {
 
     //Capture selected character
     const [selectedCharacter, setSelectedCharacter] = useState(null);
+    const [indexCharacter, setIndexCharacter] = useState(null);
     const navigate = useNavigate();
 
-    const handleRowClick = (character, trRef) => {
+    const handleRowClick = (character, trRef, index) => {
         setSelectedCharacter(character);
         setReferenceElement(trRef);
+        setIndexCharacter(index)
         setShowPopover(true);
     };
 
     const sendSelectedCharacter = (selectedCharacter) => {
-        navigate("/detailCharacter", { state: { selectedCharacter } });
-    }
+        navigate("/detailCharacter", {
+            state: { selectedCharacter, indexCharacter }
+        });
+    };
 
 
 
@@ -125,7 +149,7 @@ const Search = () => {
                             <tr
                                 key={index}
                                 ref={setReferenceElement}
-                                onClick={(e) => handleRowClick(character, e.target)}
+                                onClick={(e) => handleRowClick(character, e.target, (index + 1))}
                                 className="bg-white hover:bg-gray-100 cursor-pointer transition ease-in duration-150 delay-0"
                             >
                                 <td className="p-3 text-base text-gray-700">{character.name}</td>
@@ -173,6 +197,14 @@ const Search = () => {
                                 </span>
                                 <span className="text-gray-400 text-2xl tracking-wide">
                                     {selectedCharacter.gender}
+                                </span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <span className="text-2xl text-gray-300 tracking-wide">
+                                    Year:
+                                </span>
+                                <span className="text-gray-400 text-2xl tracking-wide">
+                                    {selectedCharacter.birth_year}
                                 </span>
                             </div>
                         </div>
