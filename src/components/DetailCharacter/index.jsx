@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import ButtonBack from "../ButtonBack";
 
-const colorsArray = ["orange", "amber", "sky", "indigo"];
+const colorsArray = ["orange", "amber", "sky", "indigo", "blue"];
 
 const DetailCharacter = () => {
     const location = useLocation();
