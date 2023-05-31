@@ -1,48 +1,76 @@
 import { Link, useLocation } from "react-router-dom";
 import ButtonBack from "../ButtonBack";
 
-const colorsArray = ["bg-blue-900", "bg-purple-900", "bg-yellow-900", "bg-green-900", "bg-red-900"];
+
 
 const DetailCharacter = () => {
     const location = useLocation();
     const character = location.state?.selectedCharacter;
     const index = location.state?.indexCharacter;
 
+    const colorsArray = [
+        "bg-lime-500",
+        "bg-green-500",
+        "bg-amber-500",
+        "bg-zinc-500",
+        "bg-stone-500",
+    ];
+
     return (
-        <div className="flex items-center justify-center h-screen bg-gray-900">
-            <Link to="/">
-                <ButtonBack />
-            </Link>
-            <div className="bg-black rounded-lg shadow-lg p-4 w-1/4">
+        <div className="font-space bg-zinc-950">
+            <div className="flex items-center justify-between p-4">
+                <Link to="/">
+                    <ButtonBack />
+                </Link>
+            </div>
+            <div className="flex flex-col md:flex-row justify-center items-center md:items-start p-4">
                 <img
                     src={`https://starwars-visualguide.com/assets/img/characters/${index}.jpg`}
                     alt="Character Starwars"
-                    className="rounded-lg w-40 h-40 object-cover mb-4"
+                    className="rounded-lg w-40 h-40 object-cover mb-4 md:mr-8"
                 />
-                <h2 className="text-white text-2xl font-semibold mb-2">{character.name}</h2>
-                <p className="text-gray-400">Character description</p>
-                <div className="bg-gray-800 w-full h-px my-4" />
-                <div className="flex flex-wrap justify-between">
-                    <div className="flex flex-wrap">
-                        <div className="flex items-center">
+                <div className="text-center md:text-left">
+                    <h2 className="text-white text-2xl font-semibold mb-2">
+                        {character.name}
+                    </h2>
+                    <p className="text-gray-400">Height {character.height} cm</p>
+                    <p className="text-gray-400">Mass {character.mass} kg</p>
+                    <p className="text-gray-400">Gender {character.gender}</p>
+                    <div className="bg-gray-800 w-full h-px my-4" />
+                    <div className="flex flex-wrap justify-center md:justify-start">
+                        <div className="flex items-center mr-8 mb-4 md:mb-0">
+                            <span className="text-white mr-1">Hair:</span>
+                            <span className="text-gray-300">{character.hair_color}</span>
+                        </div>
+                        <div className="flex items-center mr-8 mb-4 md:mb-0">
+                            <span className="text-white mr-1">Skinr:</span>
+                            <span className="text-gray-300">{character.skin_color}</span>
+                        </div>
+                        <div className="flex items-center mr-8 mb-4 md:mb-0">
+                            <span className="text-white mr-1">Eye color:</span>
+                            <span className="text-gray-300">{character.eye_color}</span>
+                        </div>
+                        <div className="flex items-center mr-8 mb-4 md:mb-0">
                             <span className="text-white mr-1">Birth year:</span>
-                            <span className="text-gray-300 mr-4">{character.birth_year}</span>
+                            <span className="text-gray-300">{character.birth_year}</span>
                         </div>
                         <div className="flex items-center">
-                            <span className="text-white m-1 p-1">Origin planet:</span>
-                            <span className="text-gray-300 mr-4 p-1">{character.homeworld}</span>
+                            <span className="text-white mr-1">Origin planet:</span>
+                            <span className="text-gray-300">{character.homeworld}</span>
                         </div>
                     </div>
-                    <div className="flex flex-wrap">
-                        <span className="text-white m-1 p-1">Films:</span>
-                        {character.films.map((film, index) => (
-                            <span
-                                key={index}
-                                className={`text-white m-1 rounded p-2 ${colorsArray[index % colorsArray.length]}`}
-                            >
-                                {film}
-                            </span>
-                        ))}
+                    <div className="flex flex-col items-center mt-4 md:flex-row md:justify-start">
+                        <span className="text-white mr-1">Films:</span>
+                        <div className="flex flex-wrap items-center">
+                            {character.films.map((film, index) => (
+                                <span
+                                    key={index}
+                                    className={`text-zinc-950 m-1 rounded p-2 ${colorsArray[index % colorsArray.length]}`}
+                                >
+                                    {film}
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

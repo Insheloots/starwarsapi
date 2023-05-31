@@ -14,7 +14,6 @@ function App() {
           <Route path="/detailCharacter" element={<DetailCharacter />} />
         </Routes>
       </Router>
-
     </>
   )
 }
