@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { usePopper } from "react-popper";
+import ContentLoader from "react-content-loader";
 import { Portal } from "../Portal";
 import { useNavigate } from "react-router-dom";
 import SearchInput from "../SearchInput";
@@ -84,7 +85,18 @@ const Search = () => {
             <SearchInput value={search} setSearch={setSearch} />
             {loading ? (
                 <div className="flex justify-center items-center">
-                    <Charging />
+                    <ContentLoader
+                        viewBox="0 0 400 160"
+                        height={170}
+                        width={500}
+                        backgroundColor="transparent"
+                    >
+                        <rect x="50" y="20" rx="3" ry="3" width="150" height="50" />
+                        <rect x="210" y="20" rx="3" ry="3" width="150" height="50" />
+                        <rect x="50" y="80" rx="3" ry="3" width="150" height="200" />
+                        <rect x="210" y="80" rx="3" ry="3" width="150" height="200" />
+                    </ContentLoader>
+
                 </div>
             ) : (
                 <div className="flex justify-center items-center">
