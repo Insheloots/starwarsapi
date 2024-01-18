@@ -1,7 +1,9 @@
+const apiUrl = 'https://swapi.dev/api/people/';
+
 const fetchCharacters = async () => {
     try {
-        const url = 'https://swapi.dev/api/people/';
-        const allCharacters = await fetchAllCharacters(url);
+
+        const allCharacters = await fetchAllCharacters(apiUrl);
         return allCharacters;
     } catch (error) {
         console.error('Error fetching characters:', error);
@@ -9,8 +11,8 @@ const fetchCharacters = async () => {
     }
 };
 
-async function fetchAllCharacters(url) {
-    const response = await fetch(url);
+async function fetchAllCharacters(apiUrl) {
+    const response = await fetch(apiUrl);
     const data = await response.json();
 
     const characters = data.results.map(async (character) => {
@@ -31,11 +33,46 @@ async function fetchAllCharacters(url) {
             homeworld: (await homeworldData.json()).name,
             films: (await Promise.all(filmsData.map((response) => response.json()))).map(
                 (film) => film.title
-            ), // Extrae los títulos de las películas
+            ),
         };
     });
 
     return Promise.all(characters);
 }
+
+export const fetchCharacterById = async (id) => {
+    try {
+        const url = `${apiUrl}/${id}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const homeworldData = await fetch(data.homeworld);
+        const filmsData = await Promise.all(
+            data.films.map((filmUrl) => fetch(filmUrl))
+        );
+
+        return {
+            ...data,
+            homeworld: (await homeworldData.json()).name,
+            films: (await Promise.all(filmsData.map((response) => response.json()))).map(
+                (film) => film.title
+            ),
+        };
+    } catch (error) {
+        throw new Error(`Error fetching character by ID: ${error.message}`);
+    }
+};
+
+export const fetchCharactersById = async (ids) => {
+    try {
+        const promises = ids.map((id) => fetchCharacterById(id));
+        const responses = await Promise.all(promises);
+        const characters = responses.map((response) => response.data);
+
+        return characters;
+    } catch (error) {
+        throw new Error(`Error fetching characters by ID: ${error.message}`);
+    }
+};
 
 export { fetchCharacters };

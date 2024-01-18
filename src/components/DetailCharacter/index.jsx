@@ -1,24 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ButtonBack from '../ButtonBack';
-import { fetchCharacters } from '../Search/apiUtils';
+import { fetchCharacterById } from '../Search/apiUtils'; // Suponiendo que esta función existe
 
 const DetailCharacter = () => {
     const location = useLocation();
-    const { selectedCharacter, indexCharacter } = location.state || {};
+    const { indexCharacter } = location.state || {};
 
     const [characterData, setCharacterData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [setError] = useState(null);
 
     useEffect(() => {
         const fetchCharacter = async () => {
             setIsLoading(true);
             try {
-                const allCharacters = await fetchCharacters();
-                const character = allCharacters.find(
-                    (char) => char.name === selectedCharacter.name
-                );
+                const character = await fetchCharacterById(indexCharacter); // Solo carga el personaje necesario
                 setCharacterData(character);
             } catch (error) {
                 setError(error);
@@ -28,7 +25,7 @@ const DetailCharacter = () => {
         };
 
         fetchCharacter();
-    }, [selectedCharacter.name]);
+    }, [indexCharacter]);
 
 
     const colorsArray = [
