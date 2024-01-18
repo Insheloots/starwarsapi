@@ -4,7 +4,6 @@ import ContentLoader from "react-content-loader";
 import { Portal } from "../Portal";
 import { useNavigate } from "react-router-dom";
 import SearchInput from "../SearchInput";
-import Charging from "../Charging";
 import { fetchCharacters } from "./apiUtils";
 
 const Search = () => {
